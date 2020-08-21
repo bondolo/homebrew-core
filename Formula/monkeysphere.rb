@@ -6,7 +6,6 @@ class Monkeysphere < Formula
   license "GPL-3.0-or-later"
   revision 2
   head "git://git.monkeysphere.info/monkeysphere"
-  license "GPL-3.0"
 
   livecheck do
     url "https://deb.debian.org/debian/pool/main/m/monkeysphere/"
