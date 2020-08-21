@@ -3,6 +3,7 @@ class Monkeysphere < Formula
   homepage "https://web.monkeysphere.info/"
   url "https://deb.debian.org/debian/pool/main/m/monkeysphere/monkeysphere_0.44.orig.tar.gz"
   sha256 "6ac6979fa1a4a0332cbea39e408b9f981452d092ff2b14ed3549be94918707aa"
+  license "GPL-3.0-or-later"
   revision 2
   head "git://git.monkeysphere.info/monkeysphere"
   license "GPL-3.0"
