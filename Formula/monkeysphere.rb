@@ -29,10 +29,12 @@ class Monkeysphere < Formula
   depends_on "gnu-sed" => :build
   depends_on "bash" # Apple's BASH 3.2 is insufficient, BASH 4.X features are used
   depends_on "coreutils"
+  depends_on "findutils" # GNU extensions are used with find
   depends_on "gnupg"
   depends_on "libassuan"
   depends_on "libgcrypt"
   depends_on "libgpg-error"
+  depends_on "liblockfile"
   depends_on "openssl@1.1"
 
   resource "Crypt::OpenSSL::Bignum" do
@@ -57,6 +59,35 @@ class Monkeysphere < Formula
     # Consequently, this is a bit of a naughty hack but the least worst option.
     inreplace pkgshare/"keytrans", "#!/usr/bin/perl -T",
                                    "#!/usr/bin/perl -T -I#{libexec}/lib/perl5"
+
+    # find is used with GNU only permissions mode
+    inreplace pkgshare/"common", "$(find ",
+                                 "$(gfind "
+    # use liblockfile
+    inreplace pkgshare/"common", "lockfile-create",
+                                 "dotlockfile"
+    inreplace pkgshare/"common", "lockfile-touch",
+                                 "dotlockfile -T"
+    inreplace pkgshare/"common", "lockfile-remove",
+                                 "dotlockfile -u"
+
+    # Needs BASH 4.0 or later, Apple's BASH 3.2 is insufficient
+    inreplace bin/"monkeysphere", "#!/usr/bin/env bash",
+                                  "#!/usr/local/opt/bash/bin/bash"
+    inreplace sbin/"monkeysphere-host", "#!/usr/bin/env bash",
+                                        "#!/usr/local/opt/bash/bin/bash"
+    inreplace sbin/"monkeysphere-authentication", "#!/usr/bin/env bash",
+                                                  "#!/usr/local/opt/bash/bin/bash"
+  end
+
+  def caveats
+    <<~EOS
+      This formula installs BASH as a dependency because Monkeysphere requires a newer 
+      version of BASH than what Apple provides. Login shells will still use Apple's 
+      version of BASH, /usr/bin/bash, but invocations of bash which rely on the PATH will
+      use the Homebrew installed BASH, e.g. '/usr/bin/env bash' will execute the Homebrew 
+      bash executable.
+    EOS
   end
 
   test do
