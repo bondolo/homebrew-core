@@ -67,11 +67,11 @@ class Monkeysphere < Formula
 
     # Needs BASH 4.0 or later, Apple's BASH 3.2 is insufficient
     inreplace bin/"monkeysphere", "#!/usr/bin/env bash",
-                                  "#!/usr/local/opt/bash/bin/bash"
+                                  "#!#{Formula["bash"].opt_bin}/bash"
     inreplace sbin/"monkeysphere-host", "#!/usr/bin/env bash",
-                                        "#!/usr/local/opt/bash/bin/bash"
+                                        "#!#{Formula["bash"].opt_bin}/bash"
     inreplace sbin/"monkeysphere-authentication", "#!/usr/bin/env bash",
-                                                  "#!/usr/local/opt/bash/bin/bash"
+                                                  "#!#{Formula["bash"].opt_bin}/bash"
   end
 
   def caveats
